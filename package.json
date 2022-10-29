@@ -1,0 +1,57 @@
+{
+  "name": "springboot2-reactjs",
+  "version": "0.1.0",
+  "description": "springboot2 with reactjs",
+  "repository": {
+    "type": "https",
+    "url": "https://github.com/yswang0927/springboot2-reactjs.git"
+  },
+  "keywords": [
+    "springboot",
+    "reactjs"
+  ],
+  "author": "yswang",
+  "license": "Apache-2.0 license",
+  "bugs": {
+    "url": "https://github.com/yswang0927/springboot2-reactjs/issues"
+  },
+  "homepage": "https://github.com/yswang0927/springboot2-reactjs",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack.config.js",
+    "watch": "cross-env NODE_ENV=development webpack --config ./webpack.config.js --watch --progress"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.3.0",
+    "redux-logger": "^3.0.6",
+    "yjs": "13.5.42",
+    "y-webrtc": "10.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "babel-loader": "^8.2.5",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^4.0.0",
+    "eslint": "^8.17.0",
+    "eslint-config-react-app": "^7.0.1",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "less": "^4.1.3",
+    "less-loader": "^11.0.0",
+    "loose-envify": "^1.4.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "postcss-loader": "^7.0.0",
+    "postcss-preset-env": "^7.7.1",
+    "terser-webpack-plugin": "^5.3.3",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  }
+}

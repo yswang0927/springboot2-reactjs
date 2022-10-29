@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>maven-projects</artifactId>
+        <groupId>com.fh</groupId>
+        <version>0.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>springboot2-reactjs</artifactId>
+    <version>0.1.0</version>
+    <packaging>${project.packaging}</packaging>
+
+    <name>springboot2-reactjs</name>
+    <description>springboot2 with reactjs</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <springboot.version>2.7.5</springboot.version>
+        <build_version>${project.version}</build_version>
+        <start-class>com.fh.ApplicationRunner</start-class>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>8.5.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <!-- 处理包内部可能存在的配置资源文件 -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- false 表示编译时不自动尝试解析替换配置文件中的 ${xxx} 变量 -->
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <excludes>
+                    <!-- webapp资源单独处理 -->
+                    <exclude>webapp/**</exclude>
+                </excludes>
+            </resource>
+
+            <!-- webapp资源单独处理 -->
+            <resource>
+                <directory>src/main/resources/webapp</directory>
+                <targetPath>${project.build.outputDirectory}/webapp</targetPath>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <excludes>
+                    <exclude>views/**</exclude>
+                    <exclude>**/*.js.map</exclude>
+                    <exclude>**/*.css.map</exclude>
+                    <exclude>**/*.LICENSE.txt</exclude>
+                    <exclude>**/.gitkeep</exclude>
+                </excludes>
+            </resource>
+            <!-- webapp/views页面视图资源单独处理：因为需要编译时替换页面中存在的 @param@ 变量 -->
+            <resource>
+                <directory>src/main/resources/webapp/views</directory>
+                <targetPath>${project.build.outputDirectory}/webapp/views</targetPath>
+                <!-- 需要替换文件中的maven的 ${xxx}或@xxx@ 等变量 -->
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+
+        </resources>
+
+        <plugins>
+            <!--
+                这个plugin解决maven内置timestamp使用UTC时区问题，
+                使用 ${build_timestamp} 替代 ${maven.build.timestamp}
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <configuration>
+                            <!-- build_timestamp 被用于下面的 build.finalName 使用和 default_layout.html 等页面使用 -->
+                            <name>build_timestamp</name>
+                            <pattern>yyyyMMdd</pattern>
+                            <locale>zh_CN</locale>
+                            <timeZone>GMT+8</timeZone>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>
+                        <!-- 为了防止和springboot的${xx}冲突，重新定义filtering占位符：@xx@ -->
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>jpeg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>gif</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>bmp</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>webp</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>docx</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>csv</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>gz</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xz</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>tar.gz</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>swf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>mp4</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>exe</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>pgp</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+
+            <!-- maven构建前端node编译打包 -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.12.1</version>
+                <configuration>
+                    <workingDirectory>${basedir}</workingDirectory>
+                    <installDirectory>${basedir}</installDirectory>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <skipTests>true</skipTests>
+                    <npmRegistryURL>http://registry.npmmirror.com</npmRegistryURL>
+                    <!-- 如果想传递一些参数给node，则可以在这里配置
+                    <environmentVariables>
+                        <key>value</key>
+                    </environmentVariables>
+                    -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install_node_and_npm</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v18.12.0</nodeVersion>
+                            <npmVersion>8.19.2</npmVersion>
+                            <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
+                            <npmDownloadRoot>https://registry.npmjs.org/npm/-/</npmDownloadRoot>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm_install</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <!-- npm arguments. Default is install -->
+                            <arguments>install</arguments>
+                            <!--
+                            <environmentVariables></environmentVariables>
+                            <npmInheritsProxyConfigFromMaven>true|false</npmInheritsProxyConfigFromMaven>
+                            <npmRegistryURL></npmRegistryURL>
+                            -->
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm_run_build</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                    <!--
+                    <execution>
+                        <id>webpack_run_build</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>webpack</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>webpack</arguments>
+                            <environmentVariables></environmentVariables>
+                            //The directory containing front end files that will be processed by webpack.
+                            //If this is set then files in the directory will be checked for modifications before running webpack.
+                            <srcdir></srcdir>
+                            //The directory where front end files will be output by webpack.
+                            //If this is set then they will be refreshed so they correctly show as modified in Eclipse.
+                            <outputdir></outputdir>
+                            //Files that should be checked for changes, in addition to the srcdir files.
+                            //Defaults to webpack.config.js in the workingDirectory.
+                            <triggerfiles></triggerfiles>
+                        </configuration>
+                    </execution>
+                    -->
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!-- 拷贝node编译后的文件(src/main/resources/webapp/assets/)到target/classes/webapp/assets/下 -->
+                    <execution>
+                        <id>ant-copy-webpack-build-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${project.build.outputDirectory}/webapp/assets/app"/>
+                                <copy todir="${project.build.outputDirectory}/webapp/assets/app/" overwrite="true" encoding="UTF-8">
+                                    <fileset dir="${basedir}/src/main/resources/webapp/assets/app">
+                                        <exclude name="**/*.js.map" />
+                                        <exclude name="**/*.css.map" />
+                                        <exclude name="**/*.LICENSE.txt" />
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <!-- 对 assets 目录进行打包，便于后期用户域|数据域前后端分离使用 -->
+                    <execution>
+                        <id>ant-compress-assets</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!--
+                                <zip destfile="${project.build.directory}/assets.zip" basedir="${project.build.outputDirectory}/webapp/assets"></zip>
+                                -->
+                                <tar compression="gzip" destfile="${project.build.directory}/assets.tar.gz" basedir="${project.build.outputDirectory}/webapp/assets" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 下载不同操作系统需要的依赖包，用于最终打包 -->
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-linux-x64-jre</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/linux-x64/</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.test.java</groupId>
+                                    <artifactId>jre-linux-x64</artifactId>
+                                    <version>1.8.0</version>
+                                    <type>tar.gz</type>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+
+        </plugins>
+    </build>
+
+    <!-- 利用maven的profile完成jar和war包构建 -->
+    <profiles>
+        <profile>
+            <!-- mvn clean install -Dmaven.test.skip=true -Pjar -->
+            <id>jar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <project.packaging>jar</project.packaging>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <version>${springboot.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <finalName>springboot2-reactjs-${project.version}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includeSystemScope>true</includeSystemScope>
+                            <mainClass>${start-class}</mainClass>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.4.2</version>
+                        <executions>
+                            <execution>
+                                <id>make-assembly-linux-x64</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- 这里的 build_timestamp 变量由 build-helper-maven-plugin 插件提供 -->
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <finalName>springboot2-reactjs-${project.version}-linux64-${build_timestamp}</finalName>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <runOnlyAtExecutionRoot>false</runOnlyAtExecutionRoot>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <descriptors>
+                                        <descriptor>package-web-assembly-linux-x64.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <!-- mvn clean install -Dmaven.test.skip=true -Pwar -->
+            <id>war</id>
+            <properties>
+                <project.packaging>war</project.packaging>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <!-- 打包名为：boss3d.war -->
+                <finalName>springboot2-reactjs</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includeSystemScope>true</includeSystemScope>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
